@@ -1,7 +1,5 @@
 {
-  "buildCommand": "",
-  "outputDirectory": ".",
-  "framework": "other",
-  "installCommand": "",
-  "env": []
+  "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false
 }
