@@ -854,17 +854,25 @@ body {
     opacity: 1;
 }
 
-.content::-webkit-scrollbar {
-    width: 4px;
+.content,
+.messages-content,
+.announcements-content,
+.compose-content,
+.account-content,
+.account-profile-content {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-.content::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.content::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 2px;
+.content::-webkit-scrollbar,
+.messages-content::-webkit-scrollbar,
+.announcements-content::-webkit-scrollbar,
+.compose-content::-webkit-scrollbar,
+.account-content::-webkit-scrollbar,
+.account-profile-content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
 }
 
 /* ===== SECTIONS ===== */
