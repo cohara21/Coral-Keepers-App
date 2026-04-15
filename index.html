@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coral Keepers Teacher App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="status-bar" aria-hidden="true"></div>
+
+        <section class="view view-lab active" id="view-lab">
+            <header class="header">
+                <h1 class="page-title">Tank Vitals</h1>
+            </header>
+
+            <main class="content">
+                <section class="vitals-section">
+                    <div class="section-header">
+                        <h2 class="section-label">Tank Health Score</h2>
+                        <span class="status-badge status-excellent">Excellent</span>
+                    </div>
+
+                    <div class="health-card">
+                        <div class="health-meter-container">
+                            <img src="assets/illustrations/health-meter.svg" alt="Health meter" class="health-meter-image">
+                            <div class="health-icon-wrapper">
+                                <img src="assets/illustrations/coral-character.svg" alt="Coral" class="health-icon">
+                            </div>
+                        </div>
+
+                        <div class="health-stats">
+                            <div class="trend">
+                                <img src="assets/illustrations/trend-indicator.svg" alt="trend" class="trend-icon">
+                                <span class="trend-value">2.1%</span>
+                            </div>
+                            <div class="health-percentage">94%</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="recap-section">
+                    <h2 class="section-label">AI Recap</h2>
+                    <div class="recap-card">
+                        <p class="recap-text">PH levels stabilized after yesterday's automated calcium injection cycle. Bio-filters performing optimally. Coral health has remained optimal for three weeks with a 2.1% increase this week. No major threats detected.</p>
+                    </div>
+                </section>
+
+                <section class="vitals-section">
+                    <div class="section-header">
+                        <h2 class="section-label">Core Vitals</h2>
+                        <span class="status-badge status-stable">Stable</span>
+                    </div>
+
+                    <div class="vitals-grid">
+                        <div class="vital-card">
+                            <div class="vital-header">
+                                <img src="assets/icons/thermometer.svg" alt="temp" class="vital-icon">
+                                <div class="vital-change">
+                                    <img src="assets/icons/trend-down.svg" alt="down" class="change-icon">
+                                    <span class="change-value">0.2°</span>
+                                </div>
+                            </div>
+                            <h3 class="vital-title">Temperature</h3>
+                            <p class="vital-value">78.2°F</p>
+                        </div>
+
+                        <div class="vital-card">
+                            <div class="vital-header">
+                                <img src="assets/icons/ph.svg" alt="ph" class="vital-icon">
+                                <div class="vital-change">
+                                    <img src="assets/icons/check-ok.svg" alt="ok" class="change-icon">
+                                    <span class="change-value">OK</span>
+                                </div>
+                            </div>
+                            <h3 class="vital-title">pH Level</h3>
+                            <p class="vital-value">8.4</p>
+                        </div>
+
+                        <div class="vital-card">
+                            <div class="vital-header">
+                                <img src="assets/icons/droplet.svg" alt="salinity" class="vital-icon">
+                                <div class="vital-change">
+                                    <img src="assets/icons/equals.svg" alt="stable" class="change-icon">
+                                    <span class="change-value">1 ppt</span>
+                                </div>
+                            </div>
+                            <h3 class="vital-title">Salinity</h3>
+                            <p class="vital-value">35 ppt</p>
+                        </div>
+
+                        <div class="vital-card">
+                            <div class="vital-header">
+                                <img src="assets/icons/redox.svg" alt="redox" class="vital-icon">
+                                <div class="vital-change">
+                                    <img src="assets/icons/trend-up.svg" alt="up" class="change-icon">
+                                    <span class="change-value">NOM</span>
+                                </div>
+                            </div>
+                            <h3 class="vital-title">Redox</h3>
+                            <p class="vital-value">380 mV</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="live-feed-section">
+                    <div class="live-feed-card">
+                        <div class="live-feed-header">
+                            <h2 class="live-feed-title">
+                                <span class="live-indicator"></span>
+                                Live Feed
+                            </h2>
+                            <span class="timestamp">12:04:32</span>
+                        </div>
+                        <div class="live-feed-video">
+                            <img src="assets/images/tank-feed.png" alt="Live tank feed" class="feed-image">
+                            <button class="play-button" aria-label="Play live feed">
+                                <img src="assets/images/play-button.svg" alt="Play">
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </section>
+
+        <section class="view view-messages" id="view-messages">
+            <header class="header messages-header">
+                <h1 class="page-title">Messages</h1>
+                <div class="message-tabs">
+                    <button class="message-tab active" type="button" data-view-target="messages">Messages</button>
+                    <button class="message-tab" type="button" data-view-target="announcements">Announcements</button>
+                </div>
+            </header>
+
+            <main class="messages-content">
+                <article class="sent-toast" id="sent-toast" aria-live="polite">
+                    <img src="assets/messages/icon-confirmed.svg" alt="Confirmed" class="sent-toast-icon">
+                    <div class="sent-toast-copy">
+                        <p class="sent-toast-title">Message Sent to Ian Breen!</p>
+                        <p class="sent-toast-time">April 13th at 5:03 PM</p>
+                    </div>
+                    <button class="sent-toast-close" id="sent-toast-close" type="button" aria-label="Close">X</button>
+                </article>
+
+                <section class="messages-group">
+                    <h2 class="messages-group-title">SPECIALISTS</h2>
+
+                    <article class="message-list-card">
+                        <img src="assets/messages/specialist-courtenay.png" alt="Dr. Courtenay Kim" class="message-card-photo">
+                        <div class="message-card-text">
+                            <div class="message-card-topline">
+                                <p class="message-card-name">Dr. Courtenay Kim</p>
+                                <p class="message-card-time">9:18 pm</p>
+                            </div>
+                            <p class="message-card-preview">How do you feel about th...</p>
+                        </div>
+                    </article>
+
+                    <article class="message-list-card">
+                        <img src="assets/messages/specialist-diver-john.png" alt="Diver John" class="message-card-photo">
+                        <div class="message-card-text">
+                            <div class="message-card-topline">
+                                <p class="message-card-name">Diver John</p>
+                                <p class="message-card-time">6:13 pm</p>
+                            </div>
+                            <p class="message-card-preview">Sounds good! I can drop it....</p>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="messages-group">
+                    <h2 class="messages-group-title" id="course-group-title">COURSES</h2>
+
+                    <article class="message-list-card message-list-card-course message-list-card-action" data-course="intro">
+                        <img src="assets/messages/class-intro-marine-bio.png" alt="Intro to Marine Biology" class="message-card-photo">
+                        <div class="message-card-text">
+                            <p class="message-card-name">Intro to Marine Biology</p>
+                            <div class="message-card-course-row">
+                                <p class="message-card-course">MAR BIO 101</p>
+                                <p class="message-card-action">+ New Message</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="message-list-card message-list-card-course">
+                        <img src="assets/messages/class-exploring-ecosystems.png" alt="Exploring Marine Ecosystems" class="message-card-photo">
+                        <div class="message-card-text">
+                            <p class="message-card-name">Exploring Marine Ecosystems</p>
+                            <div class="message-card-course-row">
+                                <p class="message-card-course">MAR BIO 201</p>
+                                <p class="message-card-action">+ New Message</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="message-list-card message-list-card-course">
+                        <img src="assets/messages/class-coral-science.png" alt="Coral Science" class="message-card-photo">
+                        <div class="message-card-text">
+                            <p class="message-card-name">Coral Science</p>
+                            <div class="message-card-course-row">
+                                <p class="message-card-course">MAR BIO 348</p>
+                                <p class="message-card-action">+ New Message</p>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+            </main>
+        </section>
+
+        <section class="view view-announcements" id="view-announcements">
+            <header class="header messages-header announcements-header">
+                <h1 class="page-title">Messages</h1>
+                <div class="message-tabs">
+                    <button class="message-tab" type="button" data-view-target="messages">Messages</button>
+                    <button class="message-tab active" type="button" data-view-target="announcements">Announcements</button>
+                </div>
+            </header>
+
+            <main class="announcements-content">
+                <article class="announcement-toast" id="announcement-toast" aria-live="polite">
+                    <img src="assets/messages/icon-confirmed.svg" alt="Confirmed" class="announcement-toast-icon">
+                    <div class="announcement-toast-copy">
+                        <p class="announcement-toast-title">Announcement Sent!</p>
+                        <p class="announcement-toast-time" id="announcement-toast-time">28 Students Notified</p>
+                    </div>
+                    <button class="announcement-toast-close" id="announcement-toast-close" type="button" aria-label="Close">X</button>
+                </article>
+
+                <section class="announcements-group">
+                    <h2 class="messages-group-title">YOUR CLASSES</h2>
+
+                    <article class="class-card" data-class-id="intro">
+                        <div class="class-card-header class-card-header-orange">
+                            <p class="class-card-title">MAR BIO 101 - Intro</p>
+                        </div>
+                        <div class="class-announcement-list" id="class-announcements-intro"></div>
+                    </article>
+
+                    <article class="class-card" data-class-id="ecosystems">
+                        <div class="class-card-header class-card-header-purple">
+                            <p class="class-card-title">MAR BIO 201 - Ecosystems</p>
+                        </div>
+                        <div class="class-announcement-list" id="class-announcements-ecosystems"></div>
+                    </article>
+
+                    <article class="class-card" data-class-id="coral">
+                        <div class="class-card-header class-card-header-blue">
+                            <p class="class-card-title">MAR BIO 348 - Coral</p>
+                        </div>
+                        <div class="class-announcement-list" id="class-announcements-coral"></div>
+                    </article>
+                </section>
+            </main>
+
+            <button class="announcement-fab" id="announcement-fab" type="button" aria-label="Create announcement"></button>
+        </section>
+
+        <section class="view view-compose" id="view-compose">
+            <header class="header compose-header">
+                <button class="compose-back" id="compose-back" type="button" aria-label="Back">
+                    <img src="assets/messages/icon-back-chevron.svg" alt="Back">
+                </button>
+                <h1 class="page-title compose-title">New Message</h1>
+            </header>
+
+            <main class="compose-content">
+                <section class="compose-section">
+                    <h2 class="messages-group-title">SELECTED COURSE</h2>
+                    <article class="message-list-card message-list-card-course">
+                        <img src="assets/messages/class-intro-marine-bio.png" alt="Intro to Marine Biology" class="message-card-photo">
+                        <div class="message-card-text">
+                            <p class="message-card-name">Intro to Marine Biology</p>
+                            <p class="message-card-course">MAR BIO 101</p>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="compose-section">
+                    <label class="messages-group-title" for="recipient-input">SELECT RECIPIENT(S):</label>
+                    <input id="recipient-input" class="compose-input" type="text" autocomplete="off">
+                </section>
+
+                <section class="compose-section">
+                    <label class="messages-group-title" for="message-input">MESSAGE</label>
+                    <textarea id="message-input" class="compose-textarea"></textarea>
+                </section>
+
+                <button id="send-button" class="compose-send" type="button" disabled>Send</button>
+            </main>
+        </section>
+
+        <section class="view view-announcement-compose" id="view-announcement-compose">
+            <header class="header compose-header announcement-compose-header">
+                <button class="compose-back" id="announcement-compose-back" type="button" aria-label="Back">
+                    <img src="assets/messages/icon-back-chevron.svg" alt="Back">
+                </button>
+                <h1 class="page-title compose-title">New Announcement</h1>
+            </header>
+
+            <main class="compose-content announcement-compose-content">
+                <section class="compose-section">
+                    <h2 class="messages-group-title">SEND TO</h2>
+                    <div class="announcement-recipient-list" id="announcement-recipient-list">
+                        <button class="announcement-recipient" type="button" data-class-id="intro">
+                            <span class="announcement-recipient-mark announcement-recipient-mark-orange"></span>
+                            <span class="announcement-recipient-name">MAR BIO 101 - Intro</span>
+                            <span class="announcement-recipient-radio" aria-hidden="true"></span>
+                        </button>
+                        <button class="announcement-recipient" type="button" data-class-id="ecosystems">
+                            <span class="announcement-recipient-mark announcement-recipient-mark-purple"></span>
+                            <span class="announcement-recipient-name">MAR BIO 201 - Ecosystems</span>
+                            <span class="announcement-recipient-radio" aria-hidden="true"></span>
+                        </button>
+                        <button class="announcement-recipient" type="button" data-class-id="coral">
+                            <span class="announcement-recipient-mark announcement-recipient-mark-blue"></span>
+                            <span class="announcement-recipient-name">MAR BIO 348 - Coral</span>
+                            <span class="announcement-recipient-radio" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="compose-section">
+                    <label class="messages-group-title" for="announcement-subject">SUBJECT</label>
+                    <input id="announcement-subject" class="compose-input announcement-compose-input" type="text" autocomplete="off">
+                </section>
+
+                <section class="compose-section">
+                    <label class="messages-group-title" for="announcement-message">MESSAGE</label>
+                    <textarea id="announcement-message" class="compose-textarea announcement-compose-textarea"></textarea>
+                </section>
+
+                <button id="announcement-post" class="compose-send announcement-send" type="button" disabled>Post</button>
+            </main>
+        </section>
+
+        <section class="view view-account" id="view-account">
+            <header class="header account-header">
+                <h1 class="page-title">Account</h1>
+            </header>
+
+            <main class="account-content">
+                <section class="account-profile-summary">
+                    <img src="assets/images/account-avatar.png" alt="Adam Smith" class="account-avatar">
+                    <p class="account-name">Adam Smith</p>
+                    <button id="view-profile-button" class="account-view-profile" type="button">View Profile</button>
+                </section>
+
+                <section class="account-menu" aria-label="Account menu">
+                    <button class="account-menu-item" type="button"><span>Institution</span><span class="account-menu-chevron" aria-hidden="true"></span></button>
+                    <button class="account-menu-item" type="button"><span>Organization</span><span class="account-menu-chevron" aria-hidden="true"></span></button>
+                    <button class="account-menu-item" type="button"><span>Tools</span><span class="account-menu-chevron" aria-hidden="true"></span></button>
+                    <button class="account-menu-item" type="button"><span>Assist</span><span class="account-menu-chevron" aria-hidden="true"></span></button>
+                    <button class="account-menu-item" type="button"><span>Settings</span><span class="account-menu-chevron" aria-hidden="true"></span></button>
+                    <button class="account-menu-item" type="button"><span>Help Center</span><span class="account-menu-chevron" aria-hidden="true"></span></button>
+                    <button class="account-menu-item" type="button"><span>About</span><span class="account-menu-chevron" aria-hidden="true"></span></button>
+                    <button class="account-menu-item" type="button"><span>Log Out</span><span class="account-menu-chevron" aria-hidden="true"></span></button>
+                </section>
+            </main>
+        </section>
+
+        <section class="view view-account-profile" id="view-account-profile">
+            <header class="header account-profile-header">
+                <button class="compose-back" id="account-profile-back" type="button" aria-label="Back">
+                    <img src="assets/messages/icon-back-chevron.svg" alt="Back">
+                </button>
+                <h1 class="page-title compose-title">Profile</h1>
+            </header>
+
+            <main class="account-profile-content">
+                <img src="assets/images/account-avatar.png" alt="Adam Smith" class="account-avatar">
+
+                <section class="account-profile-section">
+                    <h2 class="account-profile-section-title">Basic Information</h2>
+
+                    <article class="account-field-row">
+                        <p class="account-field-label">FIRST NAME</p>
+                        <p class="account-field-value">Adam</p>
+                    </article>
+
+                    <article class="account-field-row">
+                        <p class="account-field-label">LAST NAME</p>
+                        <p class="account-field-value">Smith</p>
+                    </article>
+
+                    <article class="account-field-row">
+                        <p class="account-field-label">EMAIL ID</p>
+                        <p class="account-field-value">asmith@teacher.edu</p>
+                    </article>
+                </section>
+
+                <section class="account-profile-section">
+                    <h2 class="account-profile-section-title">Additional Information</h2>
+
+                    <article class="account-field-row">
+                        <p class="account-field-label">PRONUNCIATION</p>
+                        <p class="account-field-value account-field-value-link">+ Add Pronunciation</p>
+                    </article>
+
+                    <article class="account-field-row">
+                        <p class="account-field-label">PRONOUNS</p>
+                        <p class="account-field-value account-field-value-link">+ Add Pronouns</p>
+                    </article>
+                </section>
+            </main>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#lab" class="nav-item active" data-page="lab">
+                <img src="assets/icons/lab-items.png" alt="Lab" class="nav-icon nav-icon-lab">
+                <span class="nav-label nav-label-lab">Lab</span>
+            </a>
+            <a href="#messages" class="nav-item" data-page="messages">
+                <img src="assets/icons/messages.svg" alt="Messages" class="nav-icon nav-icon-messages">
+                <span class="nav-label nav-label-messages">Messages</span>
+            </a>
+            <a href="#account" class="nav-item" data-page="account">
+                <img src="assets/icons/account.svg" alt="Account" class="nav-icon nav-icon-account">
+                <span class="nav-label nav-label-account">Account</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

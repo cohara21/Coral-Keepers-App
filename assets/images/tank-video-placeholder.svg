@@ -1,0 +1,8 @@
+<svg viewBox="0 0 354 197" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="354" height="197" fill="#1a1a1a"/>
+  <circle cx="177" cy="98" r="40" fill="#00B746" opacity="0.3"/>
+  <circle cx="120" cy="60" r="15" fill="#FF6B6B" opacity="0.4"/>
+  <circle cx="240" cy="140" r="20" fill="#4ECDC4" opacity="0.3"/>
+  <path d="M50 80 Q100 70 150 80" stroke="#00B746" stroke-width="2" fill="none" opacity="0.5"/>
+  <text x="177" y="180" text-anchor="middle" fill="#666" font-size="14" font-family="Arial">Live Tank Feed</text>
+</svg>

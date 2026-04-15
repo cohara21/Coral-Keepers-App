@@ -1,0 +1,13 @@
+{
+  "name": "coral-keepers-teacher-app",
+  "version": "1.0.0",
+  "description": "Teacher-only app for monitoring coral health in Coral Keepers",
+  "private": true,
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "build": "echo 'No build step needed for static site'"
+  },
+  "keywords": ["coral", "keepers", "teacher", "monitoring"],
+  "author": "",
+  "license": "ISC"
+}
