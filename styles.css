@@ -1238,14 +1238,6 @@ body {
     .status-bar {
         gap: 100px;
     }
-
-    .vitals-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .vital-card {
-        min-height: auto;
-    }
 }
 
 /* ===== ACCESSIBILITY ===== */
