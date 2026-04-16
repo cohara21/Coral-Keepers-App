@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageSendButton = document.getElementById('send-button');
     const messageComposeBack = document.getElementById('compose-back');
     const messageLaunchCompose = document.querySelector('.message-list-card-action[data-course="intro"]');
+    const sentToast = document.getElementById('sent-toast');
+    const sentToastClose = document.getElementById('sent-toast-close');
+    const sentToastTime = document.getElementById('sent-toast-time');
 
     const announcementFab = document.getElementById('announcement-fab');
     const announcementComposeBack = document.getElementById('announcement-compose-back');
@@ -73,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let announcementToastTimeout = null;
+    let sentToastTimeout = null;
 
     function getAnnouncementClass(classId) {
         return announcementClasses.find((item) => item.id === classId) || null;
@@ -127,6 +131,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function hideSentToast() {
+        if (!sentToast) {
+            return;
+        }
+
+        sentToast.classList.remove('visible');
+        if (sentToastTimeout) {
+            clearTimeout(sentToastTimeout);
+            sentToastTimeout = null;
+        }
+    }
+
     function showAnnouncementToast(studentCount) {
         if (!announcementToast || !announcementToastTime) {
             return;
@@ -141,6 +157,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         announcementToastTimeout = setTimeout(() => {
             hideAnnouncementToast();
+        }, ANNOUNCEMENT_FEEDBACK_MS);
+    }
+
+    function showSentToast(messageLabel) {
+        if (!sentToast || !sentToastTime) {
+            return;
+        }
+
+        sentToastTime.textContent = messageLabel;
+        sentToast.classList.add('visible');
+
+        if (sentToastTimeout) {
+            clearTimeout(sentToastTimeout);
+        }
+
+        sentToastTimeout = setTimeout(() => {
+            hideSentToast();
         }, ANNOUNCEMENT_FEEDBACK_MS);
     }
 
@@ -219,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openLab() {
         hideAnnouncementToast();
+        hideSentToast();
         setActiveView('lab');
         setActiveNav('lab');
     }
@@ -239,6 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openMessageCompose() {
         hideAnnouncementToast();
+        hideSentToast();
         setActiveView('messageCompose');
         setActiveNav('messages');
     }
@@ -267,6 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const recipientLabel = messageRecipientInput?.value.trim() || 'Intro to Biology';
+
         if (messageRecipientInput) {
             messageRecipientInput.value = '';
         }
@@ -275,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updateMessageSendState();
         openMessages();
+        showSentToast(recipientLabel);
     }
 
     function postAnnouncement() {
@@ -346,6 +384,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (messageSendButton) {
         messageSendButton.addEventListener('click', sendMessage);
+    }
+    if (sentToastClose) {
+        sentToastClose.addEventListener('click', hideSentToast);
     }
 
     if (announcementFab) {
