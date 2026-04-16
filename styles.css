@@ -1175,7 +1175,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 42px;
+    gap: 50px;
     padding: 25px 24px 23px;
     background: #f8fafd;
     flex-shrink: 0;
