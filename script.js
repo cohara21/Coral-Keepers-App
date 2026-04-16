@@ -380,6 +380,190 @@ document.addEventListener('DOMContentLoaded', () => {
         accountProfileBack.addEventListener('click', openAccount);
     }
 
+    // ===== LIVE TANK METRICS (SIMULATED, WEBSITE-PARITY) =====
+    const labView = views.lab;
+
+    const metricEls = (() => {
+        if (!labView) {
+            return null;
+        }
+
+        const healthMain = labView.querySelector('.health-percentage');
+        const healthDeltaText = labView.querySelector('.trend-value');
+        const healthDeltaArrow = labView.querySelector('.trend-arrow');
+        const timestamp = labView.querySelector('.timestamp');
+
+        const vitalCards = Array.from(labView.querySelectorAll('.vital-card'));
+        const findVitalCard = (title) => vitalCards.find((card) => {
+            const label = card.querySelector('.vital-title');
+            return Boolean(label && label.textContent && label.textContent.trim() === title);
+        }) || null;
+
+        const getCardParts = (card) => {
+            if (!card) {
+                return null;
+            }
+
+            return {
+                value: card.querySelector('.vital-value'),
+                changeValue: card.querySelector('.change-value'),
+                changeArrow: card.querySelector('.change-arrow'),
+            };
+        };
+
+        return {
+            healthMain,
+            healthDeltaText,
+            healthDeltaArrow,
+            timestamp,
+            temp: getCardParts(findVitalCard('Temperature')),
+            ph: getCardParts(findVitalCard('pH Level')),
+            salinity: getCardParts(findVitalCard('Salinity')),
+            redox: getCardParts(findVitalCard('Redox')),
+        };
+    })();
+
+    const tankMetrics = {
+        health: 94,
+        temp: 78.2,
+        ph: 8.4,
+        salinity: 35,
+        redox: 380,
+    };
+
+    const tankBounds = {
+        health: [70, 100],
+        temp: [72, 84],
+        ph: [7.8, 8.8],
+        salinity: [30, 40],
+        redox: [300, 450],
+    };
+
+    let lastTankDeltas = { health: 0, temp: 0, ph: 0, salinity: 0, redox: 0 };
+
+    function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    function jitterByPercent(value) {
+        const pct = (Math.random() * 4) - 2;
+        return { value: value * (1 + pct / 100), pct };
+    }
+
+    function arrowGlyphForPct(changePct) {
+        if (changePct > 0.05) {
+            return '↑';
+        }
+        if (changePct < -0.05) {
+            return '↓';
+        }
+        return '→';
+    }
+
+    function formatClockTime(date) {
+        const hours24 = date.getHours();
+        const hours12 = hours24 % 12 || 12;
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+
+        const pad2 = (n) => String(n).padStart(2, '0');
+        return `${pad2(hours12)}:${pad2(minutes)}:${pad2(seconds)}`;
+    }
+
+    function renderTankMetrics(deltas) {
+        if (!metricEls) {
+            return;
+        }
+
+        lastTankDeltas = deltas;
+
+        if (metricEls.healthMain) {
+            metricEls.healthMain.textContent = `${Math.round(tankMetrics.health)}%`;
+        }
+        if (metricEls.healthDeltaText) {
+            metricEls.healthDeltaText.textContent = `${Math.abs(deltas.health).toFixed(1)}%`;
+        }
+        if (metricEls.healthDeltaArrow) {
+            metricEls.healthDeltaArrow.textContent = arrowGlyphForPct(deltas.health);
+        }
+
+        if (metricEls.temp?.value) {
+            metricEls.temp.value.textContent = `${tankMetrics.temp.toFixed(1)}°F`;
+        }
+        if (metricEls.ph?.value) {
+            metricEls.ph.value.textContent = tankMetrics.ph.toFixed(2);
+        }
+        if (metricEls.salinity?.value) {
+            metricEls.salinity.value.textContent = `${Math.round(tankMetrics.salinity)} ppt`;
+        }
+        if (metricEls.redox?.value) {
+            metricEls.redox.value.textContent = `${Math.round(tankMetrics.redox)} mV`;
+        }
+
+        if (metricEls.temp?.changeValue) {
+            metricEls.temp.changeValue.textContent = `${Math.abs(deltas.temp).toFixed(1)}°`;
+        }
+        if (metricEls.temp?.changeArrow) {
+            metricEls.temp.changeArrow.textContent = arrowGlyphForPct(deltas.temp);
+        }
+
+        if (metricEls.ph?.changeArrow) {
+            metricEls.ph.changeArrow.textContent = arrowGlyphForPct(deltas.ph);
+        }
+
+        if (metricEls.salinity?.changeValue) {
+            metricEls.salinity.changeValue.textContent = `${Math.abs(deltas.salinity).toFixed(1)} ppt`;
+        }
+        if (metricEls.salinity?.changeArrow) {
+            metricEls.salinity.changeArrow.textContent = arrowGlyphForPct(deltas.salinity);
+        }
+
+        if (metricEls.redox?.changeArrow) {
+            metricEls.redox.changeArrow.textContent = arrowGlyphForPct(deltas.redox);
+        }
+    }
+
+    function updateLabTimestamp() {
+        if (!metricEls?.timestamp) {
+            return;
+        }
+
+        metricEls.timestamp.textContent = formatClockTime(new Date());
+    }
+
+    function runTankTick() {
+        const healthUpdate = jitterByPercent(tankMetrics.health);
+        tankMetrics.health = clamp(healthUpdate.value, tankBounds.health[0], tankBounds.health[1]);
+
+        const tempUpdate = jitterByPercent(tankMetrics.temp);
+        tankMetrics.temp = clamp(tempUpdate.value, tankBounds.temp[0], tankBounds.temp[1]);
+
+        const phUpdate = jitterByPercent(tankMetrics.ph);
+        tankMetrics.ph = clamp(phUpdate.value, tankBounds.ph[0], tankBounds.ph[1]);
+
+        const salinityUpdate = jitterByPercent(tankMetrics.salinity);
+        tankMetrics.salinity = clamp(salinityUpdate.value, tankBounds.salinity[0], tankBounds.salinity[1]);
+
+        const redoxUpdate = jitterByPercent(tankMetrics.redox);
+        tankMetrics.redox = clamp(redoxUpdate.value, tankBounds.redox[0], tankBounds.redox[1]);
+
+        renderTankMetrics({
+            health: healthUpdate.pct,
+            temp: tempUpdate.pct,
+            ph: phUpdate.pct,
+            salinity: salinityUpdate.pct,
+            redox: redoxUpdate.pct,
+        });
+
+        setTimeout(runTankTick, 6000 + (Math.random() * 1000));
+    }
+
+    // Initial render (zero deltas), then start ticking.
+    renderTankMetrics(lastTankDeltas);
+    updateLabTimestamp();
+    setTimeout(runTankTick, 6000 + (Math.random() * 1000));
+    setInterval(updateLabTimestamp, 1000);
+
     renderAnnouncements();
     setActiveView('lab');
     setActiveNav('lab');

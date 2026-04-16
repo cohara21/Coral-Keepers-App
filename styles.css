@@ -85,8 +85,8 @@ body {
 
 /* ===== STATUS BAR ===== */
 .status-bar {
-    height: 44px;
-    padding: 10px 20px 6px;
+    height: 26px;
+    padding: 4px 20px 0;
     flex-shrink: 0;
     display: flex;
     align-items: flex-end;
@@ -128,7 +128,7 @@ body {
 /* ===== HEADER ===== */
 .header {
     background: white;
-    padding: 8px 24px;
+    padding: 0 24px 4px;
     border-bottom: 1px solid var(--color-accent-grey);
     flex-shrink: 0;
 }
@@ -151,6 +151,23 @@ body {
     scroll-behavior: smooth;
 }
 
+.view-lab .header {
+    padding-top: 0;
+    padding-bottom: 4px;
+}
+
+.view-lab .content {
+    padding-top: 0;
+}
+
+.view-lab .page-title {
+    transform: none;
+}
+
+.view-lab .vitals-section:first-of-type {
+    margin-top: 8px;
+}
+
 .view {
     display: none;
     flex: 1;
@@ -164,7 +181,7 @@ body {
 
 .messages-header {
     border-bottom: 0;
-    padding: 8px 24px 16px;
+    padding: 0 24px 12px;
 }
 
 .message-tabs {
@@ -616,7 +633,7 @@ body {
 
 .account-header {
     border-bottom: 0;
-    padding: 8px 24px;
+    padding: 0 24px 4px;
 }
 
 .account-content {
@@ -884,6 +901,10 @@ body {
     gap: var(--space-md);
 }
 
+.view-lab .vitals-section:first-of-type .section-header {
+    margin-top: 0;
+}
+
 .live-feed-section {
     gap: 0;
 }
@@ -990,10 +1011,15 @@ body {
     justify-content: center;
 }
 
-.trend-icon {
+.trend-arrow {
     width: 22px;
     height: 12px;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 14px/1 var(--font-primary);
+    color: var(--color-info);
+    transform: translateY(-0.5px);
 }
 
 .trend-value {
@@ -1061,9 +1087,14 @@ body {
     align-items: center;
 }
 
-.change-icon {
-    width: 8px;
-    height: auto;
+.change-arrow {
+    width: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 12px/1 var(--font-primary);
+    color: var(--color-neutral-dark);
+    transform: translateY(-0.5px);
 }
 
 .vital-change img[src$="trend-up.svg"],
@@ -1173,10 +1204,10 @@ body {
 /* ===== BOTTOM NAVIGATION ===== */
 .bottom-nav {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: flex-start;
-    gap: 50px;
-    padding: 25px 24px 23px;
+    gap: 0;
+    padding: 25px 16px 23px;
     background: #f8fafd;
     flex-shrink: 0;
     min-height: 90px;
