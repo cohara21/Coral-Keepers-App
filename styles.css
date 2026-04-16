@@ -1173,11 +1173,13 @@ body {
 /* ===== BOTTOM NAVIGATION ===== */
 .bottom-nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
-    padding: 21px 33px 20px;
+    gap: 42px;
+    padding: 25px 24px 23px;
     background: #f8fafd;
     flex-shrink: 0;
+    min-height: 90px;
 }
 
 .nav-item {
