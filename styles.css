@@ -1243,6 +1243,7 @@ body {
 .nav-icon {
     object-fit: contain;
     display: block;
+    margin-top: -3px;
 }
 
 .nav-icon-lab {
