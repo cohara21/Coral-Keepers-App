@@ -1,0 +1,23 @@
+{
+  "name": "Coral Keepers Teacher App",
+  "short_name": "Coral Keepers",
+  "description": "Tank vitals, live feed, and messaging for Coral Keepers teachers.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2B66E4",
+  "icons": [
+    {
+      "src": "assets/app/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/app/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
