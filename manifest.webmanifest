@@ -4,8 +4,8 @@
   "description": "Tank vitals, live feed, and messaging for Coral Keepers teachers.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2B66E4",
+  "background_color": "#faf9f8",
+  "theme_color": "#0075de",
   "icons": [
     {
       "src": "assets/app/icon-192.png",

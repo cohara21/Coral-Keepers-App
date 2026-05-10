@@ -1,20 +1,31 @@
 /* ===== ROOT & DESIGN TOKENS ===== */
 :root {
+    /* Coral Keepers HTML prototypes (CORAL_KEEPERS_SURFACE_COLORS.md) */
+    --bg: #faf9f8;
+    /* Bottom nav: slightly lifted from page canvas */
+    --bg-nav: #ffffff;
+    --text-dark: #2f3333;
+    --text-muted: #5b605f;
+    --card-border: rgba(0, 0, 0, 0.1);
+    --divider: rgba(0, 0, 0, 0.05);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --radius-card: 8px;
+
     /* Brand Colors */
-    --color-ocean-blue: #2B66E4;
-    --color-coral-green: #00B746;
-    --color-text-black: #171717;
+    --color-ocean-blue: #0075de;
+    --color-coral-green: #16a34a;
+    --color-text-black: var(--text-dark);
     --color-dark-bg: #28303F;
     
     /* UI Colors */
     --color-accent-grey: #EDF3FC;
-    --color-secondary-text: #6F7C8C;
+    --color-secondary-text: var(--text-muted);
     --color-tertiary-text: #94A3B8;
-    --color-neutral-dark: #2F3333;
+    --color-neutral-dark: #2f3333;
     --color-border: #B6B9BF;
     
     /* Status Colors */
-    --color-success: #00B746;
+    --color-success: #16a34a;
     --color-info: #005EB4;
     --color-warning: #FF9800;
     --color-danger: #9F403D;
@@ -42,7 +53,7 @@
     
     /* Borders & Shadows */
     --radius: 16px;
-    --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: var(--shadow-card);
 }
 
 /* ===== GLOBAL STYLES ===== */
@@ -61,8 +72,8 @@ html, body {
 }
 
 body {
-    background: white;
-    color: var(--color-text-black);
+    background: var(--bg);
+    color: var(--text-dark);
     font-family: var(--font-primary);
     overflow: hidden;
 }
@@ -76,7 +87,7 @@ body {
     height: 100dvh;
     display: flex;
     flex-direction: column;
-    background: white;
+    background: transparent;
     max-width: 100vw;
     max-height: 100dvh;
     margin: 0;
@@ -91,7 +102,8 @@ body {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    color: var(--color-text-black);
+    background: transparent;
+    color: var(--text-dark);
     font: 700 17px/1 var(--font-primary);
 }
 
@@ -127,16 +139,18 @@ body {
 
 /* ===== HEADER ===== */
 .header {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     padding: 0 24px 4px;
-    border-bottom: 1px solid var(--color-accent-grey);
+    border-bottom: 1px solid var(--card-border);
     flex-shrink: 0;
 }
 
 .page-title {
     font: var(--text-large-heading);
     letter-spacing: 0.797px;
-    color: var(--color-text-black);
+    color: var(--text-dark);
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -154,6 +168,10 @@ body {
 .view-lab .header {
     padding-top: 0;
     padding-bottom: 4px;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom: none;
 }
 
 .view-lab .content {
@@ -182,21 +200,27 @@ body {
 .messages-header {
     border-bottom: 0;
     padding: 0 24px 12px;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 .message-tabs {
     margin-top: 8px;
-    background: var(--color-accent-grey);
-    border-radius: 8px;
-    padding: 8px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 6px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
 }
 
 .message-tab {
     border: 0;
-    border-radius: 8px;
+    border-radius: 6px;
     background: transparent;
     color: var(--color-secondary-text);
     font: 600 16px/1 var(--font-primary);
@@ -206,16 +230,16 @@ body {
 }
 
 .message-tab.active {
-    background: white;
-    color: var(--color-text-black);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    background: var(--bg);
+    color: var(--text-dark);
+    box-shadow: inset 0 0 0 1px var(--divider);
 }
 
 .messages-content {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    background: var(--color-accent-grey);
+    background: var(--bg);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -226,7 +250,7 @@ body {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    background: var(--color-accent-grey);
+    background: var(--bg);
     padding: 16px 24px 112px;
     display: flex;
     flex-direction: column;
@@ -252,10 +276,10 @@ body {
 .message-list-card {
     width: 100%;
     min-height: 72px;
-    background: white;
-    border: 1px solid #efefef;
-    border-radius: 8px;
-    box-shadow: var(--shadow-sm);
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
     display: flex;
     align-items: stretch;
     overflow: hidden;
@@ -331,10 +355,10 @@ body {
     align-items: center;
     gap: 16px;
     padding: 16px;
-    border-radius: 16px;
-    background: white;
-    border: 1px solid #efefef;
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-card);
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-card);
 }
 
 .sent-toast.visible {
@@ -386,10 +410,10 @@ body {
     align-items: center;
     gap: 16px;
     padding: 16px;
-    border-radius: 16px;
-    background: white;
-    border: 1px solid #efefef;
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-card);
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-card);
 }
 
 .announcement-toast.visible {
@@ -443,10 +467,11 @@ body {
 
 .class-card {
     width: 100%;
-    border-radius: 16px;
+    border-radius: var(--radius-card);
     overflow: hidden;
-    background: white;
-    box-shadow: var(--shadow-sm);
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-card);
 }
 
 .class-card-header {
@@ -479,7 +504,7 @@ body {
 .class-announcement-list {
     display: flex;
     flex-direction: column;
-    background: white;
+    background: #ffffff;
 }
 
 .class-announcement {
@@ -487,8 +512,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    border-top: 1px solid #efefef;
-    background: white;
+    border-top: 1px solid var(--divider);
+    background: #ffffff;
 }
 
 .class-announcement.is-new {
@@ -622,7 +647,7 @@ body {
 }
 
 .announcement-recipient.is-selected {
-    background: rgba(43, 102, 228, 0.05);
+    background: rgba(0, 117, 222, 0.05);
 }
 
 .announcement-recipient.is-selected .announcement-recipient-radio {
@@ -653,7 +678,7 @@ body {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    background: white;
+    background: var(--bg);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -746,7 +771,7 @@ body {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    background: white;
+    background: var(--bg);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -773,7 +798,7 @@ body {
     flex-direction: column;
     gap: 16px;
     padding: 10px 0;
-    border-bottom: 1px solid var(--color-accent-grey);
+    border-bottom: 1px solid var(--divider);
 }
 
 .account-field-label {
@@ -825,7 +850,7 @@ body {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    background: var(--color-accent-grey);
+    background: var(--bg);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -923,11 +948,11 @@ body {
 }
 
 .live-feed-card {
-    border: 1px solid var(--color-accent-grey);
-    border-radius: var(--radius);
-    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    background: #ffffff;
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
 }
 
 .section-header {
@@ -964,34 +989,55 @@ body {
 
 /* ===== HEALTH CARD ===== */
 .health-card {
-    border: 1px solid var(--color-accent-grey);
-    border-radius: var(--radius);
-    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    background: #ffffff;
     padding: var(--space-md);
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
     align-items: center;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
 }
 
-.health-meter-container {
+/* Arc gauge + knob (arc-knob-implementation.md) */
+.health-meter-container.gauge-panel {
     position: relative;
-    width: 200px;
-    height: 161px;
+    width: 100%;
+    max-width: 320px;
+    min-height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.health-meter-image {
-    position: absolute;
+.meter-wrapper {
+    max-width: 500px;
+    position: relative;
+    transform: translateY(18px);
     width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    object-fit: contain;
-    display: block;
+    z-index: 2;
+}
+
+.gauge-svg {
+    cursor: default;
+    height: auto;
+    overflow: visible;
+    width: 100%;
+}
+
+.gauge-base {
+    fill: none;
+    stroke: url(#gaugeGradient);
+    stroke-linecap: round;
+    stroke-width: 16;
+}
+
+.knob-pill {
+    cursor: default;
+    fill: #fff;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    transition: transform 0.1s ease-out;
 }
 
 .health-icon-wrapper {
@@ -1001,6 +1047,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 3;
+    pointer-events: none;
 }
 
 .health-icon {
@@ -1048,16 +1096,16 @@ body {
 
 /* ===== RECAP CARD ===== */
 .recap-card {
-    border: 1px solid var(--color-accent-grey);
-    border-radius: var(--radius);
-    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    background: #ffffff;
     padding: var(--space-md);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
 }
 
 .recap-text {
     font: var(--text-body);
-    color: var(--color-text-black);
+    color: var(--text-dark);
     line-height: 1.4;
 }
 
@@ -1069,14 +1117,14 @@ body {
 }
 
 .vital-card {
-    border: 1px solid var(--color-accent-grey);
-    border-radius: var(--radius);
-    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    background: #ffffff;
     padding: 17px;
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
     min-height: 107px;
     justify-content: space-between;
 }
@@ -1141,8 +1189,8 @@ body {
     align-items: center;
     width: 100%;
     padding: 17px;
-    background: white;
-    border-bottom: 1px solid var(--color-accent-grey);
+    background: #ffffff;
+    border-bottom: 1px solid var(--divider);
 }
 
 .live-feed-title {
@@ -1296,7 +1344,8 @@ body {
     align-items: flex-start;
     gap: 0;
     padding: 25px 16px 23px;
-    background: #f8fafd;
+    background: var(--bg-nav);
+    border-top: 1px solid var(--divider);
     flex-shrink: 0;
     min-height: 90px;
 }
@@ -1377,6 +1426,10 @@ body {
     .live-indicator {
         animation: none;
         opacity: 1;
+    }
+
+    .knob-pill {
+        transition: none;
     }
 
     * {

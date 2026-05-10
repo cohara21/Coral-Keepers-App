@@ -599,6 +599,40 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.min(max, Math.max(min, value));
     }
 
+    /* arc-knob-implementation.md — keep SVG path & constants in sync */
+    const HEALTH_ARC_RADIUS_X = 114;
+    const HEALTH_ARC_RADIUS_Y = 134;
+    const HEALTH_ARC_CX = 130;
+    const HEALTH_ARC_CY = 134;
+    const HEALTH_KNOB_INDICATOR_OFFSET = 2.5;
+    const HEALTH_KNOB_SHIFT_X = 5;
+
+    function updateHealthMeterKnob(value) {
+        const knobGroup = labView?.querySelector('#knobGroup');
+        if (!knobGroup) {
+            return;
+        }
+
+        const clamped = clamp(value, 0, 100);
+        const percentage = clamped / 100;
+        const angleRad = Math.PI - percentage * Math.PI;
+        const x = HEALTH_ARC_CX + HEALTH_ARC_RADIUS_X * Math.cos(angleRad);
+        const y = HEALTH_ARC_CY - HEALTH_ARC_RADIUS_Y * Math.sin(angleRad);
+        const dx = -HEALTH_ARC_RADIUS_X * Math.sin(angleRad);
+        const dy = -HEALTH_ARC_RADIUS_Y * Math.cos(angleRad);
+        const rotation = (Math.atan2(dy, dx) * 180) / Math.PI;
+        const normalX = (x - HEALTH_ARC_CX) / (HEALTH_ARC_RADIUS_X * HEALTH_ARC_RADIUS_X);
+        const normalY = (y - HEALTH_ARC_CY) / (HEALTH_ARC_RADIUS_Y * HEALTH_ARC_RADIUS_Y);
+        const normalLength = Math.hypot(normalX, normalY) || 1;
+        const offsetX = (normalX / normalLength) * HEALTH_KNOB_INDICATOR_OFFSET;
+        const offsetY = (normalY / normalLength) * HEALTH_KNOB_INDICATOR_OFFSET;
+
+        knobGroup.setAttribute(
+            'transform',
+            `translate(${x + offsetX + HEALTH_KNOB_SHIFT_X}, ${y + offsetY}) rotate(${rotation})`
+        );
+    }
+
     function jitterByPercent(value) {
         const pct = (Math.random() * 4) - 2;
         return { value: value * (1 + pct / 100), pct };
@@ -675,6 +709,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (metricEls.redox?.changeArrow) {
             metricEls.redox.changeArrow.textContent = arrowGlyphForPct(deltas.redox);
         }
+
+        updateHealthMeterKnob(tankMetrics.health);
     }
 
     function updateLabTimestamp() {
