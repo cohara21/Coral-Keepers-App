@@ -428,16 +428,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const liveFeedIframeWrap = document.getElementById('live-feed-iframe-wrap');
     const liveFeedTapBack = document.getElementById('live-feed-tap-back');
 
-    function liveFeedEmbedSrc() {
+    /** iOS (incl. Add to Home Screen) and most phones block unmuted embed autoplay — mute allows playback to start. */
+    function liveFeedNeedsMutedAutoplay() {
+        if (typeof navigator !== 'undefined' && navigator.standalone === true) {
+            return true;
+        }
+        try {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                return true;
+            }
+            if (window.matchMedia('(display-mode: fullscreen)').matches) {
+                return true;
+            }
+            if (window.matchMedia('(pointer: coarse)').matches && window.matchMedia('(hover: none)').matches) {
+                return true;
+            }
+        } catch {
+            /* matchMedia unavailable */
+        }
+        const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : '';
+        if (/Android/i.test(ua)) {
+            return true;
+        }
+        if (/iPhone|iPad|iPod/i.test(ua)) {
+            return true;
+        }
+        if (
+            typeof navigator !== 'undefined' &&
+            navigator.platform === 'MacIntel' &&
+            navigator.maxTouchPoints > 1
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    function liveFeedEmbedSrc(mutedAutoplay) {
         const params = new URLSearchParams({
             autoplay: '1',
             playsinline: '1',
             rel: '0',
-            controls: '0',
             modestbranding: '1',
             iv_load_policy: '3',
             fs: '0',
+            controls: mutedAutoplay ? '1' : '0',
         });
+        if (mutedAutoplay) {
+            params.set('mute', '1');
+        }
         return `https://www.youtube.com/embed/${LIVE_FEED_YOUTUBE_ID}?${params.toString()}`;
     }
 
@@ -448,17 +486,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         liveFeedIframeWrap.innerHTML = '';
 
+        const mutedAutoplay = liveFeedNeedsMutedAutoplay();
+
         const iframe = document.createElement('iframe');
         iframe.title = 'Live tank feed video';
         iframe.allow =
             'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
         iframe.allowFullscreen = true;
-        iframe.src = liveFeedEmbedSrc();
+        iframe.src = liveFeedEmbedSrc(mutedAutoplay);
 
         liveFeedIframeWrap.appendChild(iframe);
         liveFeedEmbed.hidden = false;
         if (liveFeedTapBack) {
             liveFeedTapBack.hidden = false;
+            liveFeedTapBack.classList.toggle('live-feed-tap-back--chip', mutedAutoplay);
+            liveFeedTapBack.classList.toggle('live-feed-tap-back--full', !mutedAutoplay);
+            liveFeedTapBack.setAttribute(
+                'aria-label',
+                mutedAutoplay ? 'Close video' : 'Close video and return to preview'
+            );
         }
         if (liveFeedPoster) {
             liveFeedPoster.hidden = true;
@@ -474,6 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
         liveFeedEmbed.hidden = true;
         if (liveFeedTapBack) {
             liveFeedTapBack.hidden = true;
+            liveFeedTapBack.classList.remove('live-feed-tap-back--chip', 'live-feed-tap-back--full');
         }
         if (liveFeedPoster) {
             liveFeedPoster.hidden = false;
