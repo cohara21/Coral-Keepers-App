@@ -117,10 +117,16 @@
                             <span class="timestamp">12:04:32</span>
                         </div>
                         <div class="live-feed-video">
-                            <img src="assets/images/tank-feed.png" alt="Live tank feed" class="feed-image">
-                            <button class="play-button" aria-label="Play live feed">
-                                <img src="assets/images/play-button.svg" alt="Play">
-                            </button>
+                            <div class="live-feed-poster" id="live-feed-poster">
+                                <img src="assets/images/tank-feed.png" alt="Live tank feed" class="feed-image">
+                                <button type="button" class="play-button" id="live-feed-play" aria-label="Play live feed video">
+                                    <img src="assets/images/play-button.svg" alt="">
+                                </button>
+                            </div>
+                            <div class="live-feed-embed" id="live-feed-embed" hidden>
+                                <div class="live-feed-iframe-wrap" id="live-feed-iframe-wrap"></div>
+                                <button type="button" class="live-feed-tap-back" id="live-feed-tap-back" hidden aria-label="Close video and return to preview"></button>
+                            </div>
                         </div>
                     </div>
                 </section>

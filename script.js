@@ -421,6 +421,72 @@ document.addEventListener('DOMContentLoaded', () => {
         accountProfileBack.addEventListener('click', openAccount);
     }
 
+    const LIVE_FEED_YOUTUBE_ID = 'eHxbMa2RVTQ';
+    const liveFeedPlay = document.getElementById('live-feed-play');
+    const liveFeedPoster = document.getElementById('live-feed-poster');
+    const liveFeedEmbed = document.getElementById('live-feed-embed');
+    const liveFeedIframeWrap = document.getElementById('live-feed-iframe-wrap');
+    const liveFeedTapBack = document.getElementById('live-feed-tap-back');
+
+    function liveFeedEmbedSrc() {
+        const params = new URLSearchParams({
+            autoplay: '1',
+            playsinline: '1',
+            rel: '0',
+            controls: '0',
+            modestbranding: '1',
+            iv_load_policy: '3',
+            fs: '0',
+        });
+        return `https://www.youtube.com/embed/${LIVE_FEED_YOUTUBE_ID}?${params.toString()}`;
+    }
+
+    function openLiveFeedYoutube() {
+        if (!liveFeedEmbed || !liveFeedIframeWrap) {
+            return;
+        }
+
+        liveFeedIframeWrap.innerHTML = '';
+
+        const iframe = document.createElement('iframe');
+        iframe.title = 'Live tank feed video';
+        iframe.allow =
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        iframe.src = liveFeedEmbedSrc();
+
+        liveFeedIframeWrap.appendChild(iframe);
+        liveFeedEmbed.hidden = false;
+        if (liveFeedTapBack) {
+            liveFeedTapBack.hidden = false;
+        }
+        if (liveFeedPoster) {
+            liveFeedPoster.hidden = true;
+        }
+    }
+
+    function closeLiveFeedYoutube() {
+        if (!liveFeedEmbed || !liveFeedIframeWrap) {
+            return;
+        }
+
+        liveFeedIframeWrap.innerHTML = '';
+        liveFeedEmbed.hidden = true;
+        if (liveFeedTapBack) {
+            liveFeedTapBack.hidden = true;
+        }
+        if (liveFeedPoster) {
+            liveFeedPoster.hidden = false;
+        }
+    }
+
+    if (liveFeedPlay) {
+        liveFeedPlay.addEventListener('click', openLiveFeedYoutube);
+    }
+    if (liveFeedTapBack) {
+        liveFeedTapBack.addEventListener('click', closeLiveFeedYoutube);
+    }
+
     // ===== LIVE TANK METRICS (SIMULATED, WEBSITE-PARITY) =====
     const labView = views.lab;
 
