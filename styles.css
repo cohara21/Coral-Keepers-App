@@ -329,6 +329,8 @@ body {
 
 .message-card-photo-frame--kim .message-card-photo {
     object-position: 60% 32%;
+    transform: scale(1);
+    transform-origin: center center;
 }
 
 .message-card-photo-frame--john .message-card-photo {
