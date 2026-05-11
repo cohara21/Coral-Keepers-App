@@ -180,8 +180,10 @@
                 <section class="messages-group">
                     <h2 class="messages-group-title">SPECIALISTS</h2>
 
-                    <article class="message-list-card">
-                        <img src="assets/messages/specialist-courtenay.png" alt="Dr. Courtenay Kim" class="message-card-photo">
+                    <article class="message-list-card message-list-card-specialist" data-specialist="courtenay" role="button" tabindex="0">
+                        <div class="message-card-photo-frame message-card-photo-frame--kim">
+                            <img src="assets/images/DrKimHeadshot.webp" alt="Dr. Courtenay Kim" class="message-card-photo">
+                        </div>
                         <div class="message-card-text">
                             <div class="message-card-topline">
                                 <p class="message-card-name">Dr. Courtenay Kim</p>
@@ -191,8 +193,10 @@
                         </div>
                     </article>
 
-                    <article class="message-list-card">
-                        <img src="assets/messages/specialist-diver-john.png" alt="Diver John" class="message-card-photo">
+                    <article class="message-list-card message-list-card-specialist" data-specialist="john" role="button" tabindex="0">
+                        <div class="message-card-photo-frame message-card-photo-frame--john">
+                            <img src="assets/images/DiverJohnHeadshot.webp" alt="Diver John" class="message-card-photo">
+                        </div>
                         <div class="message-card-text">
                             <div class="message-card-topline">
                                 <p class="message-card-name">Diver John</p>
@@ -244,7 +248,7 @@
 
         <section class="view view-announcements" id="view-announcements">
             <header class="header messages-header announcements-header">
-                <h1 class="page-title">Messages</h1>
+                <h1 class="page-title">Announcements</h1>
                 <div class="message-tabs">
                     <button class="message-tab" type="button" data-view-target="messages">Messages</button>
                     <button class="message-tab active" type="button" data-view-target="announcements">Announcements</button>
@@ -436,6 +440,22 @@
                         <p class="account-field-value account-field-value-link">+ Add Pronouns</p>
                     </article>
                 </section>
+            </main>
+        </section>
+
+        <section class="view view-specialist-chat" id="view-specialist-chat">
+            <header class="header compose-header specialist-chat-header">
+                <button class="compose-back" id="specialist-chat-back" type="button" aria-label="Back">
+                    <img src="assets/messages/icon-back-chevron.svg" alt="">
+                </button>
+                <h1 class="page-title compose-title" id="specialist-chat-title">Specialist</h1>
+            </header>
+            <main class="specialist-chat-main">
+                <div class="specialist-thread" id="specialist-thread" role="log" aria-relevant="additions"></div>
+                <div class="specialist-chat-composer">
+                    <textarea id="specialist-chat-input" class="specialist-chat-input" rows="1" placeholder="Message" autocomplete="off" aria-label="Message"></textarea>
+                    <button type="button" class="specialist-chat-send" id="specialist-chat-send" disabled>Send</button>
+                </div>
             </main>
         </section>
 

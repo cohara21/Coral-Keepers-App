@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         announcements: document.getElementById('view-announcements'),
         messageCompose: document.getElementById('view-compose'),
         announcementCompose: document.getElementById('view-announcement-compose'),
+        specialistChat: document.getElementById('view-specialist-chat'),
         account: document.getElementById('view-account'),
         accountProfile: document.getElementById('view-account-profile'),
     };
@@ -39,6 +40,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const announcementToastTime = document.getElementById('announcement-toast-time');
     const viewProfileButton = document.getElementById('view-profile-button');
     const accountProfileBack = document.getElementById('account-profile-back');
+
+    const specialistChatBack = document.getElementById('specialist-chat-back');
+    const specialistChatTitle = document.getElementById('specialist-chat-title');
+    const specialistThreadEl = document.getElementById('specialist-thread');
+    const specialistChatInput = document.getElementById('specialist-chat-input');
+    const specialistChatSend = document.getElementById('specialist-chat-send');
+    const specialistCards = Array.from(document.querySelectorAll('.message-list-card-specialist[data-specialist]'));
+
+    const specialistMeta = {
+        courtenay: { title: 'Dr. Courtenay Kim' },
+        john: { title: 'Diver John' },
+    };
+
+    const specialistThreads = {
+        courtenay: [
+            { from: 'them', text: 'Hi Adam — quick check on tank 3 before tomorrow\'s visit?', time: 'Mon 4:12 pm' },
+            { from: 'me', text: 'All readings looked normal last night.', time: 'Mon 5:03 pm' },
+            {
+                from: 'them',
+                text: 'How do you feel about the calcium dosing schedule we discussed? Want to bump it slightly before Friday\'s lab?',
+                time: 'Tues 9:18 pm',
+            },
+        ],
+        john: [
+            { from: 'them', text: 'Hey, I can swing by with gear if you still need it.', time: 'Sun 11:02 am' },
+            { from: 'me', text: 'Tuesday works best if that\'s okay.', time: 'Sun 2:41 pm' },
+            {
+                from: 'them',
+                text: 'Sounds good! I can drop off the spare probes Tuesday morning before class.',
+                time: 'Sun 3:05 pm',
+            },
+        ],
+    };
+
+    let activeSpecialistId = null;
 
     const announcementLists = {
         intro: document.getElementById('class-announcements-intro'),
@@ -278,6 +314,125 @@ document.addEventListener('DOMContentLoaded', () => {
         setActiveNav('messages');
     }
 
+    function formatDmTime(date) {
+        return date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    }
+
+    function truncateDmPreview(text, maxLen = 72) {
+        const cleaned = text.replace(/\s+/g, ' ').trim();
+        if (cleaned.length <= maxLen) {
+            return cleaned;
+        }
+        return `${cleaned.slice(0, Math.max(0, maxLen - 1))}…`;
+    }
+
+    function updateSpecialistComposerState() {
+        if (!specialistChatInput || !specialistChatSend) {
+            return;
+        }
+        const hasText = specialistChatInput.value.trim().length > 0;
+        specialistChatSend.disabled = !hasText;
+        specialistChatSend.classList.toggle('active', hasText);
+    }
+
+    function renderSpecialistThread() {
+        if (!specialistThreadEl || !activeSpecialistId) {
+            return;
+        }
+        const msgs = specialistThreads[activeSpecialistId];
+        if (!msgs) {
+            return;
+        }
+
+        specialistThreadEl.innerHTML = '';
+        msgs.forEach((msg) => {
+            const row = document.createElement('div');
+            row.className = `dm-row dm-row--${msg.from}`;
+
+            const bubble = document.createElement('div');
+            bubble.className = `dm-bubble dm-bubble--${msg.from}`;
+
+            const body = document.createElement('p');
+            body.textContent = msg.text;
+
+            const timeEl = document.createElement('span');
+            timeEl.className = 'dm-time';
+            timeEl.textContent = msg.time;
+
+            bubble.append(body, timeEl);
+            row.appendChild(bubble);
+            specialistThreadEl.appendChild(row);
+        });
+
+        specialistThreadEl.scrollTop = specialistThreadEl.scrollHeight;
+    }
+
+    function updateSpecialistListPreview(specialistId, lastText) {
+        const card = document.querySelector(`.message-list-card-specialist[data-specialist="${specialistId}"]`);
+        if (!card) {
+            return;
+        }
+        const preview = card.querySelector('.message-card-preview');
+        const timeEl = card.querySelector('.message-card-time');
+        if (preview) {
+            preview.textContent = truncateDmPreview(lastText);
+        }
+        if (timeEl) {
+            timeEl.textContent = formatDmTime(new Date());
+        }
+    }
+
+    function openSpecialistChat(specialistId) {
+        if (!specialistMeta[specialistId] || !views.specialistChat) {
+            return;
+        }
+        hideAnnouncementToast();
+        hideSentToast();
+        activeSpecialistId = specialistId;
+        if (specialistChatTitle) {
+            specialistChatTitle.textContent = specialistMeta[specialistId].title;
+        }
+        renderSpecialistThread();
+        if (specialistChatInput) {
+            specialistChatInput.value = '';
+        }
+        updateSpecialistComposerState();
+        setActiveView('specialistChat');
+        setActiveNav('messages');
+        setTopTab('messages');
+        requestAnimationFrame(() => {
+            specialistChatInput?.focus();
+        });
+    }
+
+    function closeSpecialistChat() {
+        activeSpecialistId = null;
+        openMessages();
+    }
+
+    function sendSpecialistMessage() {
+        if (!activeSpecialistId || !specialistChatSend || specialistChatSend.disabled) {
+            return;
+        }
+        const text = specialistChatInput?.value.trim();
+        if (!text) {
+            return;
+        }
+
+        specialistThreads[activeSpecialistId].push({
+            from: 'me',
+            text,
+            time: formatDmTime(new Date()),
+        });
+
+        if (specialistChatInput) {
+            specialistChatInput.value = '';
+        }
+        updateSpecialistComposerState();
+        renderSpecialistThread();
+        updateSpecialistListPreview(activeSpecialistId, text);
+    }
+
     function openAccount() {
         hideAnnouncementToast();
         setActiveView('account');
@@ -420,6 +575,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (accountProfileBack) {
         accountProfileBack.addEventListener('click', openAccount);
     }
+
+    if (specialistChatBack) {
+        specialistChatBack.addEventListener('click', closeSpecialistChat);
+    }
+    if (specialistChatSend) {
+        specialistChatSend.addEventListener('click', sendSpecialistMessage);
+    }
+    if (specialistChatInput) {
+        specialistChatInput.addEventListener('input', updateSpecialistComposerState);
+        specialistChatInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendSpecialistMessage();
+            }
+        });
+    }
+
+    specialistCards.forEach((card) => {
+        const id = card.dataset.specialist;
+        if (!id) {
+            return;
+        }
+        card.addEventListener('click', () => openSpecialistChat(id));
+        card.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openSpecialistChat(id);
+            }
+        });
+    });
 
     const LIVE_FEED_YOUTUBE_ID = 'eHxbMa2RVTQ';
     const liveFeedPlay = document.getElementById('live-feed-play');
