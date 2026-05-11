@@ -770,18 +770,20 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     })();
 
+    const HEALTH_RANGE_NORMAL = [51, 100];
+    /** Low demo mode: health stays within 0–50% and starts at 30 when enabled */
+    const HEALTH_RANGE_LOW = [0, 50];
+    const HEALTH_LOW_START = 30;
+    /** When exiting low demo mode, restore this value (matches initial lab health). */
+    const HEALTH_NORMAL_START = 85;
+
     const tankMetrics = {
-        health: 85,
+        health: HEALTH_NORMAL_START,
         temp: 78.2,
         ph: 8.4,
         salinity: 35,
         redox: 380,
     };
-
-    const HEALTH_RANGE_NORMAL = [51, 100];
-    /** Low demo mode: health stays within 0–50% and starts at 30 when enabled */
-    const HEALTH_RANGE_LOW = [0, 50];
-    const HEALTH_LOW_START = 30;
 
     const tankBounds = {
         health: [...HEALTH_RANGE_NORMAL],
@@ -791,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
         redox: [300, 450],
     };
 
-    /** Tap invisible hitbox on health card: low mode clamps 0–50% (starts at 30); tap again restores 51–100% range */
+    /** Tap invisible hitbox on health card: low mode clamps 0–50% (starts at 30); tap again restores normal band and health to 85 */
     let tankLowHealthMode = false;
 
     function syncHealthBoundsToMode() {
@@ -804,7 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tankLowHealthMode) {
             tankMetrics.health = HEALTH_LOW_START;
         } else {
-            tankMetrics.health = clamp(tankMetrics.health, HEALTH_RANGE_NORMAL[0], HEALTH_RANGE_NORMAL[1]);
+            tankMetrics.health = HEALTH_NORMAL_START;
         }
         renderTankMetrics(lastTankDeltas);
     }
