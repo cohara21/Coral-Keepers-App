@@ -720,8 +720,11 @@ body {
 }
 
 .account-header {
-    border-bottom: 0;
-    padding: 0 24px 4px;
+    border-bottom: none;
+    padding: 0 24px 12px;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 .account-content {
@@ -811,10 +814,14 @@ body {
 }
 
 .account-profile-header {
-    border-bottom: 0;
+    border-bottom: none;
     display: flex;
     align-items: center;
     gap: 16px;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    padding-bottom: 12px;
 }
 
 .account-profile-content {
