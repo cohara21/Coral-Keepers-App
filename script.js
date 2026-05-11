@@ -543,6 +543,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const healthMain = labView.querySelector('.health-percentage');
+        const healthIcon = labView.querySelector('#health-cory-mascot');
+        const healthScoreStatus = labView.querySelector('#health-score-status');
+        const coreVitalsStatus = labView.querySelector('#core-vitals-status');
+        const aiRecapText = labView.querySelector('#ai-recap-text');
         const healthDeltaText = labView.querySelector('.trend-value');
         const healthDeltaArrow = labView.querySelector('.trend-arrow');
         const timestamp = labView.querySelector('.timestamp');
@@ -567,6 +571,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             healthMain,
+            healthIcon,
+            healthScoreStatus,
+            coreVitalsStatus,
+            aiRecapText,
             healthDeltaText,
             healthDeltaArrow,
             timestamp,
@@ -578,25 +586,148 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
     const tankMetrics = {
-        health: 94,
+        health: 85,
         temp: 78.2,
         ph: 8.4,
         salinity: 35,
         redox: 380,
     };
 
+    const HEALTH_RANGE_NORMAL = [51, 100];
+    /** Low demo mode: health stays within 0–50% and starts at 30 when enabled */
+    const HEALTH_RANGE_LOW = [0, 50];
+    const HEALTH_LOW_START = 30;
+
     const tankBounds = {
-        health: [70, 100],
+        health: [...HEALTH_RANGE_NORMAL],
         temp: [72, 84],
         ph: [7.8, 8.8],
         salinity: [30, 40],
         redox: [300, 450],
     };
 
+    /** Tap invisible hitbox on health card: low mode clamps 0–50% (starts at 30); tap again restores 51–100% range */
+    let tankLowHealthMode = false;
+
+    function syncHealthBoundsToMode() {
+        tankBounds.health = tankLowHealthMode ? [...HEALTH_RANGE_LOW] : [...HEALTH_RANGE_NORMAL];
+    }
+
+    function toggleTankLowHealthDemo() {
+        tankLowHealthMode = !tankLowHealthMode;
+        syncHealthBoundsToMode();
+        if (tankLowHealthMode) {
+            tankMetrics.health = HEALTH_LOW_START;
+        } else {
+            tankMetrics.health = clamp(tankMetrics.health, HEALTH_RANGE_NORMAL[0], HEALTH_RANGE_NORMAL[1]);
+        }
+        renderTankMetrics(lastTankDeltas);
+    }
+
+    const tankLowModeToggle = document.getElementById('tank-low-mode-toggle');
+    if (tankLowModeToggle) {
+        tankLowModeToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleTankLowHealthDemo();
+        });
+    }
+
     let lastTankDeltas = { health: 0, temp: 0, ph: 0, salinity: 0, redox: 0 };
 
     function clamp(value, min, max) {
         return Math.min(max, Math.max(min, value));
+    }
+
+    /** Same stops as #gaugeGradient in index.html — piecewise RGB lerp */
+    const GAUGE_COLOR_STOPS = [
+        { t: 0, r: 0xff, g: 0x5c, b: 0x69 },
+        { t: 0.35, r: 0xff, g: 0xb0, b: 0x20 },
+        { t: 0.65, r: 0xc7, g: 0xdd, b: 0x19 },
+        { t: 1, r: 0x34, g: 0xc9, b: 0x6b },
+    ];
+
+    function lerpChannel(a, b, u) {
+        return Math.round(a + (b - a) * u);
+    }
+
+    /** Cory 1 = happiest, Cory 6 = worst — filenames: Cory 1.svg … Cory 6.svg */
+    const CORY_ALT_BY_TIER = [
+        'Cory mascot, thriving',
+        'Cory mascot, doing well',
+        'Cory mascot, neutral',
+        'Cory mascot, struggling',
+        'Cory mascot, poor condition',
+        'Cory mascot, critical condition',
+    ];
+
+    /** Indexed by Cory tier 1–6 (matches coryTierForHealth) */
+    const HEALTH_SCORE_LABEL_BY_TIER = [
+        'Optimal',
+        'Strong',
+        'Fair',
+        'At risk',
+        'Poor',
+        'Critical',
+    ];
+
+    const CORE_VITALS_LABEL_BY_TIER = [
+        'Perfect',
+        'Steady',
+        'Drifting',
+        'Uneven',
+        'Strained',
+        'Failing',
+    ];
+
+    const AI_RECAP_BY_TIER = [
+        'Tank chemistry is locked in: pH and calcium held steady through the last dosing cycle. Bio-filters are running clean and coral polyps look extended. Overall vitality is excellent—keep the current maintenance rhythm.',
+        'Parameters look healthy overall: minor drift in alkalinity but within tolerance. Bio-filters are clearing waste steadily and coral tissue looks full. Watch nitrate on the next water change—nothing urgent yet.',
+        'Readings are mixed: temperature and salinity are stable, but nutrient uptake has softened and corals look a little flat. Consider a modest water change and confirm dosing heads are firing on schedule.',
+        'Several vitals are slipping together—buffering is weaker and bio-load looks uneven. Skimmer output dropped and algae may be gaining ground. Shorten the inspection interval and address filtration before scores fall further.',
+        'The system is under stress: swings in pH or redox are stressing livestock and filtration is struggling to keep up. Partial water changes and reduced feeding are advised until metrics stabilize.',
+        'Conditions are severe: core chemistry may be unsafe for sensitive species and biological filtration could crash without intervention. Treat this as an emergency review—test everything, reduce bio-load, and stabilize basics immediately.',
+    ];
+
+    /** Bands: ≥90 → 1, ≥75 → 2, ≥60 → 3, ≥45 → 4, ≥25 → 5, else → 6 */
+    function coryTierForHealth(health) {
+        const h = clamp(health, 0, 100);
+        if (h >= 90) {
+            return 1;
+        }
+        if (h >= 75) {
+            return 2;
+        }
+        if (h >= 60) {
+            return 3;
+        }
+        if (h >= 45) {
+            return 4;
+        }
+        if (h >= 25) {
+            return 5;
+        }
+        return 6;
+    }
+
+    function coryIllustrationSrc(tier) {
+        return `assets/illustrations/${encodeURIComponent(`Cory ${tier}.svg`)}`;
+    }
+
+    function gaugeColorAtHealth(health) {
+        const t = clamp(health, 0, 100) / 100;
+        let i = 0;
+        while (i < GAUGE_COLOR_STOPS.length - 1 && t > GAUGE_COLOR_STOPS[i + 1].t) {
+            i += 1;
+        }
+        const a = GAUGE_COLOR_STOPS[i];
+        const b = GAUGE_COLOR_STOPS[i + 1];
+        const span = b.t - a.t;
+        const u = span <= 0 ? 0 : (t - a.t) / span;
+        const r = lerpChannel(a.r, b.r, u);
+        const g = lerpChannel(a.g, b.g, u);
+        const bl = lerpChannel(a.b, b.b, u);
+        const toHex = (n) => n.toString(16).padStart(2, '0');
+        return `#${toHex(r)}${toHex(g)}${toHex(bl)}`;
     }
 
     /* arc-knob-implementation.md — keep SVG path & constants in sync */
@@ -605,6 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const HEALTH_ARC_CX = 130;
     const HEALTH_ARC_CY = 134;
     const HEALTH_KNOB_INDICATOR_OFFSET = 2.5;
+    /** Horizontal trim — scaled by cos(angle) so low-health (left of arc) isn’t pushed right like a constant +5px does */
     const HEALTH_KNOB_SHIFT_X = 5;
 
     function updateHealthMeterKnob(value) {
@@ -626,10 +758,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const normalLength = Math.hypot(normalX, normalY) || 1;
         const offsetX = (normalX / normalLength) * HEALTH_KNOB_INDICATOR_OFFSET;
         const offsetY = (normalY / normalLength) * HEALTH_KNOB_INDICATOR_OFFSET;
+        const knobShiftX = HEALTH_KNOB_SHIFT_X * Math.cos(angleRad);
 
         knobGroup.setAttribute(
             'transform',
-            `translate(${x + offsetX + HEALTH_KNOB_SHIFT_X}, ${y + offsetY}) rotate(${rotation})`
+            `translate(${x + offsetX + knobShiftX}, ${y + offsetY}) rotate(${rotation})`
         );
     }
 
@@ -708,6 +841,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (metricEls.redox?.changeArrow) {
             metricEls.redox.changeArrow.textContent = arrowGlyphForPct(deltas.redox);
+        }
+
+        const healthHue = gaugeColorAtHealth(tankMetrics.health);
+        if (metricEls.healthMain) {
+            metricEls.healthMain.style.color = healthHue;
+        }
+        if (metricEls.healthScoreStatus) {
+            metricEls.healthScoreStatus.style.color = healthHue;
+        }
+        if (metricEls.coreVitalsStatus) {
+            metricEls.coreVitalsStatus.style.color = healthHue;
+        }
+
+        const coryTier = coryTierForHealth(tankMetrics.health);
+        const tierIdx = coryTier - 1;
+        if (metricEls.healthScoreStatus) {
+            metricEls.healthScoreStatus.textContent = HEALTH_SCORE_LABEL_BY_TIER[tierIdx] || '—';
+        }
+        if (metricEls.coreVitalsStatus) {
+            metricEls.coreVitalsStatus.textContent = CORE_VITALS_LABEL_BY_TIER[tierIdx] || '—';
+        }
+        if (metricEls.aiRecapText) {
+            metricEls.aiRecapText.textContent = AI_RECAP_BY_TIER[tierIdx] || '';
+        }
+
+        if (metricEls.healthIcon) {
+            const prevTier = metricEls.healthIcon.dataset.coryTier;
+            if (prevTier !== String(coryTier)) {
+                metricEls.healthIcon.dataset.coryTier = String(coryTier);
+                metricEls.healthIcon.src = coryIllustrationSrc(coryTier);
+                metricEls.healthIcon.alt = CORY_ALT_BY_TIER[coryTier - 1] || 'Cory mascot';
+            }
         }
 
         updateHealthMeterKnob(tankMetrics.health);

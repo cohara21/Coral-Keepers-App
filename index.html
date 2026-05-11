@@ -21,18 +21,19 @@
         <div class="status-bar" aria-hidden="true"></div>
 
         <section class="view view-lab active" id="view-lab">
-            <header class="header">
-                <h1 class="page-title">Tank Vitals</h1>
-            </header>
-
             <main class="content">
+                <header class="header">
+                    <h1 class="page-title">Tank Vitals</h1>
+                </header>
+
                 <section class="vitals-section">
                     <div class="section-header">
                         <h2 class="section-label">Tank Health Score</h2>
-                        <span class="status-badge status-excellent">Excellent</span>
+                        <span id="health-score-status" class="status-badge status-excellent">Strong</span>
                     </div>
 
                     <div class="health-card">
+                        <button type="button" class="tank-low-mode-hitbox" id="tank-low-mode-toggle" aria-label="Toggle low tank health demonstration mode"></button>
                         <div class="health-meter-container gauge-panel">
                             <div class="meter-wrapper">
                                 <svg class="gauge-svg" viewBox="0 0 260 160" aria-label="Tank health arc gauge">
@@ -51,7 +52,9 @@
                                 </svg>
                             </div>
                             <div class="health-icon-wrapper">
-                                <img src="assets/illustrations/coral-character.svg" alt="Coral" class="health-icon">
+                                <span class="health-icon-frame">
+                                    <img src="assets/illustrations/Cory%202.svg" alt="Cory mascot, doing well" class="health-icon" id="health-cory-mascot" data-cory-tier="2">
+                                </span>
                             </div>
                         </div>
 
@@ -60,7 +63,7 @@
                                 <span class="trend-arrow" aria-hidden="true">→</span>
                                 <span class="trend-value">2.1%</span>
                             </div>
-                            <div class="health-percentage">94%</div>
+                            <div class="health-percentage">85%</div>
                         </div>
                     </div>
                 </section>
@@ -68,14 +71,14 @@
                 <section class="recap-section">
                     <h2 class="section-label">AI Recap</h2>
                     <div class="recap-card">
-                        <p class="recap-text">PH levels stabilized after yesterday's automated calcium injection cycle. Bio-filters performing optimally. Coral health has remained optimal for three weeks with a 2.1% increase this week. No major threats detected.</p>
+                        <p id="ai-recap-text" class="recap-text">Parameters look healthy overall: minor drift in alkalinity but within tolerance. Bio-filters are clearing waste steadily and coral tissue looks full. Watch nitrate on the next water change—nothing urgent yet.</p>
                     </div>
                 </section>
 
                 <section class="vitals-section">
                     <div class="section-header">
                         <h2 class="section-label">Core Vitals</h2>
-                        <span class="status-badge status-stable">Stable</span>
+                        <span id="core-vitals-status" class="status-badge status-stable">Steady</span>
                     </div>
 
                     <div class="vitals-grid">

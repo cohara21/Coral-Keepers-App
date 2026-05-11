@@ -168,6 +168,8 @@ body {
 .view-lab .header {
     padding-top: 0;
     padding-bottom: 4px;
+    padding-left: 0;
+    padding-right: 0;
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -175,7 +177,7 @@ body {
 }
 
 .view-lab .content {
-    padding-top: 0;
+    padding-top: var(--space-lg);
 }
 
 .view-lab .page-title {
@@ -183,7 +185,7 @@ body {
 }
 
 .view-lab .vitals-section:first-of-type {
-    margin-top: 8px;
+    margin-top: 0;
 }
 
 .view {
@@ -978,17 +980,22 @@ body {
 }
 
 .status-excellent {
-    color: var(--color-coral-green);
     background: transparent;
 }
 
 .status-stable {
-    color: var(--color-coral-green);
     background: transparent;
+}
+
+/* Colors driven by gaugeColorAtHealth() in script.js */
+#health-score-status,
+#core-vitals-status {
+    color: #34c96b;
 }
 
 /* ===== HEALTH CARD ===== */
 .health-card {
+    position: relative;
     border: 1px solid var(--card-border);
     border-radius: var(--radius-card);
     background: #ffffff;
@@ -998,6 +1005,24 @@ body {
     gap: var(--space-lg);
     align-items: center;
     box-shadow: var(--shadow-card);
+}
+
+/* Hidden demo control: tap top-right of health card for low tank demo (0–50% range, starts at 30%) */
+.tank-low-mode-hitbox {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Arc gauge + knob (arc-knob-implementation.md) */
@@ -1035,8 +1060,10 @@ body {
 
 .knob-pill {
     cursor: default;
-    fill: #fff;
-    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    fill: var(--bg);
+    stroke: rgba(0, 0, 0, 0.12);
+    stroke-width: 1;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
     transition: transform 0.1s ease-out;
 }
 
@@ -1051,10 +1078,25 @@ body {
     pointer-events: none;
 }
 
+/* Fixed footprint so Cory 1–6 SVGs (different viewBoxes) render at consistent size */
+.health-icon-frame {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 92px;
+    height: 160px;
+    flex-shrink: 0;
+    transform: translateY(14px);
+}
+
 .health-icon {
-    width: 63px;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     display: block;
+    object-fit: contain;
+    object-position: bottom center;
 }
 
 .health-stats {
@@ -1063,6 +1105,7 @@ body {
     align-items: center;
     gap: var(--space-xs);
     width: 100%;
+    margin-top: -18px;
 }
 
 .trend {
@@ -1090,7 +1133,7 @@ body {
 
 .health-percentage {
     font: 700 48px / 1 'Inter', sans-serif;
-    color: var(--color-coral-green);
+    color: #34c96b;
     letter-spacing: 0;
 }
 
