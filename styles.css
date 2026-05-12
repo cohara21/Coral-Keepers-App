@@ -142,7 +142,7 @@ body {
     background: rgba(255, 255, 255, 0.95);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    padding: 0 24px 4px;
+    padding: 0 var(--space-lg) 12px;
     border-bottom: 1px solid var(--card-border);
     flex-shrink: 0;
 }
@@ -165,19 +165,12 @@ body {
     scroll-behavior: smooth;
 }
 
-.view-lab .header {
-    padding-top: 0;
-    padding-bottom: 4px;
-    padding-left: 0;
-    padding-right: 0;
+.view-lab > .header {
+    padding: 0 var(--space-lg) 12px;
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     border-bottom: none;
-}
-
-.view-lab .content {
-    padding-top: var(--space-lg);
 }
 
 .view-lab .page-title {
@@ -201,7 +194,7 @@ body {
 
 .messages-header {
     border-bottom: 0;
-    padding: 0 24px 12px;
+    padding: 0 var(--space-lg) 12px;
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -721,7 +714,7 @@ body {
 
 .account-header {
     border-bottom: none;
-    padding: 0 24px 12px;
+    padding: 0 var(--space-lg) 12px;
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -818,10 +811,10 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
+    padding: 0 var(--space-lg) 12px;
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    padding-bottom: 12px;
 }
 
 .account-profile-content {
@@ -878,6 +871,7 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
+    padding: 0 var(--space-lg) 12px;
 }
 
 .compose-title {
@@ -973,7 +967,7 @@ body {
     border-bottom: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    padding-bottom: 12px;
+    padding: 0 var(--space-lg) 12px;
 }
 
 /* Specialist 1:1 chat */
