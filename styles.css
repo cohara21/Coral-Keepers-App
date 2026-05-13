@@ -165,8 +165,9 @@ body {
     scroll-behavior: smooth;
 }
 
-.view-lab > .header {
-    padding: 0 var(--space-lg) 12px;
+/* Lab: header scrolls with body; horizontal alignment uses .content padding only */
+.view-lab .content > .header {
+    padding: 0 0 12px;
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
