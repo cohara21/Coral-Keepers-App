@@ -1,0 +1,25 @@
+# Fallback when Git → Vercel automatic deploys do not run on push.
+# 1. Vercel: Project → Settings → Git → Deploy Hooks → create hook for branch `main`, copy URL.
+# 2. GitHub: Repo → Settings → Secrets and variables → Actions → New repository secret
+#    Name: VERCEL_DEPLOY_HOOK   Value: (paste the full hook URL)
+name: Trigger Vercel deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  vercel-hook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST Vercel deploy hook
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "${HOOK}" ]; then
+            echo "Missing GitHub secret VERCEL_DEPLOY_HOOK. Add it under Repo → Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          curl --fail-with-body -sS -X POST "${HOOK}"
