@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const specialistThreads = {
         courtenay: [
-            { from: 'them', text: 'Hi Adam — quick check on tank 3 before tomorrow\'s visit?', time: 'Mon 4:12 pm' },
+            { from: 'them', text: 'Hi Rebecca — quick check on tank 3 before tomorrow\'s visit?', time: 'Mon 4:12 pm' },
             { from: 'me', text: 'All readings looked normal last night.', time: 'Mon 5:03 pm' },
             {
                 from: 'them',
