@@ -18,7 +18,50 @@ document.addEventListener('DOMContentLoaded', () => {
         messages: document.querySelector('[data-page="messages"] .nav-icon'),
         account: document.querySelector('[data-page="account"] .nav-icon'),
     };
+
+    [
+        'assets/icons/lab-items.png',
+        'assets/icons/lab-items-inactive.png',
+        'assets/icons/messages.svg',
+        'assets/icons/messages-active.svg',
+        'assets/icons/account.svg',
+        'assets/icons/account-active.svg',
+    ].forEach((src) => {
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = src;
+    });
+
     const topTabButtons = Array.from(document.querySelectorAll('[data-view-target]'));
+
+    let currentViewKey = Object.keys(views).find((k) => views[k]?.classList.contains('active')) || 'lab';
+
+    function primeInactiveViewImages() {
+        [
+            'view-messages',
+            'view-account',
+            'view-account-profile',
+            'view-announcements',
+            'view-compose',
+            'view-announcement-compose',
+        ].forEach((id) => {
+            const root = document.getElementById(id);
+            if (!root) {
+                return;
+            }
+            root.querySelectorAll('img').forEach((img) => {
+                if (typeof img.decode === 'function') {
+                    img.decode().catch(() => {});
+                }
+            });
+        });
+    }
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            primeInactiveViewImages();
+        });
+    });
 
     const messageRecipientInput = document.getElementById('recipient-input');
     const messageBodyInput = document.getElementById('message-input');
@@ -119,16 +162,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setActiveView(target) {
-        Object.values(views).forEach((view) => {
-            if (view) {
-                view.classList.remove('active');
-            }
-        });
-
         const targetView = views[target];
-        if (targetView) {
-            targetView.classList.add('active');
+        if (!targetView) {
+            return;
         }
+        if (target === currentViewKey) {
+            return;
+        }
+
+        const prev = views[currentViewKey];
+        if (prev) {
+            prev.classList.remove('active');
+        } else {
+            Object.values(views).forEach((view) => {
+                if (view) {
+                    view.classList.remove('active');
+                }
+            });
+        }
+
+        targetView.classList.add('active');
+        currentViewKey = target;
     }
 
     function setActiveNav(target) {
@@ -139,13 +193,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (navIcons.lab) {
-            navIcons.lab.src = target === 'lab' ? 'assets/icons/lab-items.png' : 'assets/icons/lab-items-inactive.png';
+            const file = target === 'lab' ? 'lab-items.png' : 'lab-items-inactive.png';
+            if (!navIcons.lab.src.endsWith(file)) {
+                navIcons.lab.src = target === 'lab' ? 'assets/icons/lab-items.png' : 'assets/icons/lab-items-inactive.png';
+            }
         }
         if (navIcons.messages) {
-            navIcons.messages.src = target === 'messages' ? 'assets/icons/messages-active.svg' : 'assets/icons/messages.svg';
+            const file = target === 'messages' ? 'messages-active.svg' : 'messages.svg';
+            if (!navIcons.messages.src.endsWith(file)) {
+                navIcons.messages.src = target === 'messages' ? 'assets/icons/messages-active.svg' : 'assets/icons/messages.svg';
+            }
         }
         if (navIcons.account) {
-            navIcons.account.src = target === 'account' ? 'assets/icons/account-active.svg' : 'assets/icons/account.svg';
+            const file = target === 'account' ? 'account-active.svg' : 'account.svg';
+            if (!navIcons.account.src.endsWith(file)) {
+                navIcons.account.src = target === 'account' ? 'assets/icons/account-active.svg' : 'assets/icons/account.svg';
+            }
         }
     }
 
@@ -287,31 +350,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openLab() {
+        setActiveNav('lab');
+        setActiveView('lab');
         hideAnnouncementToast();
         hideSentToast();
-        setActiveView('lab');
-        setActiveNav('lab');
     }
 
     function openMessages() {
-        hideAnnouncementToast();
-        setActiveView('messages');
         setActiveNav('messages');
         setTopTab('messages');
+        requestAnimationFrame(() => {
+            setActiveView('messages');
+            hideAnnouncementToast();
+            hideSentToast();
+        });
     }
 
     function openAnnouncements() {
-        setActiveView('announcements');
         setActiveNav('messages');
+        setActiveView('announcements');
         setTopTab('announcements');
         renderAnnouncements();
     }
 
     function openMessageCompose() {
+        setActiveNav('messages');
+        setActiveView('messageCompose');
         hideAnnouncementToast();
         hideSentToast();
-        setActiveView('messageCompose');
-        setActiveNav('messages');
     }
 
     function formatDmTime(date) {
@@ -397,12 +463,9 @@ document.addEventListener('DOMContentLoaded', () => {
             specialistChatInput.value = '';
         }
         updateSpecialistComposerState();
-        setActiveView('specialistChat');
         setActiveNav('messages');
+        setActiveView('specialistChat');
         setTopTab('messages');
-        requestAnimationFrame(() => {
-            specialistChatInput?.focus();
-        });
     }
 
     function closeSpecialistChat() {
@@ -434,22 +497,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openAccount() {
-        hideAnnouncementToast();
-        setActiveView('account');
         setActiveNav('account');
+        requestAnimationFrame(() => {
+            setActiveView('account');
+            hideAnnouncementToast();
+        });
     }
 
     function openAccountProfile() {
-        hideAnnouncementToast();
-        setActiveView('accountProfile');
         setActiveNav('account');
+        setActiveView('accountProfile');
+        hideAnnouncementToast();
     }
 
     function openAnnouncementCompose() {
-        hideAnnouncementToast();
+        setActiveNav('messages');
         resetAnnouncementCompose();
         setActiveView('announcementCompose');
-        setActiveNav('messages');
+        hideAnnouncementToast();
     }
 
     function sendMessage() {

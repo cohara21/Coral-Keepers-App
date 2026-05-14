@@ -1584,7 +1584,9 @@ body {
     align-items: center;
     text-decoration: none;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: opacity 0.12s ease-out;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .nav-item:active {
