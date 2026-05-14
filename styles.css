@@ -302,6 +302,11 @@ body {
     outline-offset: 2px;
 }
 
+.message-list-card-course.message-list-card-action:focus-visible {
+    outline: 2px solid var(--color-ocean-blue);
+    outline-offset: 2px;
+}
+
 /* Specialist headshots: same left column; crop/zoom tuned inside fixed frame. */
 .message-card-photo-frame {
     width: 64px;
@@ -772,16 +777,18 @@ body {
 .account-menu {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0;
     width: 100%;
 }
 
 .account-menu-item {
     border: 0;
-    background: white;
+    border-bottom: 1px solid var(--divider);
+    border-radius: 0;
+    background: transparent;
     width: 100%;
     min-height: 44px;
-    padding: 10px;
+    padding: 12px 4px 12px 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -789,6 +796,14 @@ body {
     font: 600 16px/1 var(--font-primary);
     text-align: left;
     cursor: pointer;
+}
+
+.account-menu-item:last-child {
+    border-bottom: none;
+}
+
+.account-menu-item:active {
+    background: rgba(0, 0, 0, 0.04);
 }
 
 .account-menu-chevron {
@@ -964,9 +979,10 @@ body {
     opacity: 1;
 }
 
-/* Specialist chat & announcement compose: no solid header strip */
+/* Specialist chat & compose: no solid header strip */
 .specialist-chat-header,
-.announcement-compose-header {
+.announcement-compose-header,
+.compose-header {
     background: transparent;
     border-bottom: none;
     -webkit-backdrop-filter: none;

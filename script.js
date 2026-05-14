@@ -67,7 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageBodyInput = document.getElementById('message-input');
     const messageSendButton = document.getElementById('send-button');
     const messageComposeBack = document.getElementById('compose-back');
-    const messageLaunchCompose = document.querySelector('.message-list-card-action[data-course="intro"]');
+    const composeCoursePreviewEl = document.querySelector('#view-compose .message-list-card-course');
+    const composeCoursePhotoEl = composeCoursePreviewEl?.querySelector('.message-card-photo');
+    const composeCourseTitleEl = composeCoursePreviewEl?.querySelector('.message-card-name');
+    const composeCourseCodeEl = composeCoursePreviewEl?.querySelector('.message-card-course');
     const sentToast = document.getElementById('sent-toast');
     const sentToastClose = document.getElementById('sent-toast-close');
     const sentToastTime = document.getElementById('sent-toast-time');
@@ -373,7 +376,43 @@ document.addEventListener('DOMContentLoaded', () => {
         renderAnnouncements();
     }
 
-    function openMessageCompose() {
+    const COURSE_COMPOSE_BY_ID = {
+        intro: {
+            photo: 'assets/messages/class-intro-marine-bio.png',
+            photoAlt: 'Intro to Marine Biology',
+            title: 'Intro to Marine Biology',
+            code: 'MAR BIO 101',
+        },
+        ecosystems: {
+            photo: 'assets/messages/class-exploring-ecosystems.png',
+            photoAlt: 'Exploring Marine Ecosystems',
+            title: 'Exploring Marine Ecosystems',
+            code: 'MAR BIO 201',
+        },
+        coral: {
+            photo: 'assets/messages/class-coral-science.png',
+            photoAlt: 'Coral Science',
+            title: 'Coral Science',
+            code: 'MAR BIO 348',
+        },
+    };
+
+    function applyComposeCoursePreview(courseId) {
+        const meta = COURSE_COMPOSE_BY_ID[courseId] || COURSE_COMPOSE_BY_ID.intro;
+        if (composeCoursePhotoEl) {
+            composeCoursePhotoEl.src = meta.photo;
+            composeCoursePhotoEl.alt = meta.photoAlt;
+        }
+        if (composeCourseTitleEl) {
+            composeCourseTitleEl.textContent = meta.title;
+        }
+        if (composeCourseCodeEl) {
+            composeCourseCodeEl.textContent = meta.code;
+        }
+    }
+
+    function openMessageCompose(courseId = 'intro') {
+        applyComposeCoursePreview(courseId);
         setActiveNav('messages');
         setActiveView('messageCompose');
         hideAnnouncementToast();
@@ -590,9 +629,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    if (messageLaunchCompose) {
-        messageLaunchCompose.addEventListener('click', openMessageCompose);
-    }
+    document.querySelectorAll('.message-list-card-course.message-list-card-action[data-course]').forEach((card) => {
+        const id = card.dataset.course;
+        if (!id) {
+            return;
+        }
+        card.addEventListener('click', () => openMessageCompose(id));
+        card.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openMessageCompose(id);
+            }
+        });
+    });
     if (messageComposeBack) {
         messageComposeBack.addEventListener('click', openMessages);
     }
